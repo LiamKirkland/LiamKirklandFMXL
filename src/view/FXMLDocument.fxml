@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="383.0" prefWidth="440.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.FXMLDocumentController">
+    <children>
+        <Button fx:id="quitButton" onAction="#quit" prefHeight="40.0" prefWidth="60.0" text="Quit">
+         <font>
+            <Font name="System Bold" size="16.0" />
+         </font></Button>
+      <Button fx:id="createButton" layoutX="60.0" onAction="#createAction" prefHeight="40.0" prefWidth="95.0" text="Create">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Button>
+      <Button fx:id="readButton" layoutX="155.0" onAction="#readAction" prefHeight="40.0" prefWidth="95.0" text="Read">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Button>
+      <Button fx:id="updateButton" layoutX="250.0" onAction="#updateAction" prefHeight="40.0" prefWidth="95.0" text="Update">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Button>
+      <Button fx:id="deleteButton" layoutX="345.0" onAction="#deleteAction" prefHeight="40.0" prefWidth="95.0" text="Delete">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Button>
+      <Button fx:id="findByNameButton" layoutX="70.0" layoutY="98.0" mnemonicParsing="false" onAction="#findByDefinedName" prefHeight="80.0" prefWidth="300.0" text="Find names that contain ___">
+         <font>
+            <Font name="System Bold Italic" size="20.0" />
+         </font>
+      </Button>
+      <Button fx:id="findByDateButton" layoutX="70.0" layoutY="232.0" mnemonicParsing="false" onAction="#findByDate" prefHeight="80.0" prefWidth="300.0" text="Find friends met before date:">
+         <font>
+            <Font name="System Bold Italic" size="20.0" />
+         </font>
+      </Button>
+    </children>
+</AnchorPane>
