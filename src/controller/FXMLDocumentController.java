@@ -55,6 +55,9 @@ public class FXMLDocumentController {
 
     @FXML
     private Button searchButton;
+    
+    @FXML
+    private Button advSearchButton;
 
     @FXML
     private TextField searchField;
@@ -86,8 +89,27 @@ public class FXMLDocumentController {
     }
 
     @FXML
-    void searchStudents(ActionEvent event) {
+    void advSearch(ActionEvent event) { 
         System.out.println("Clicked!");
+
+        String name = searchField.getText();
+
+        List<Matcheduser> users = searchPartByName(name);
+
+        if (users == null || users.isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Search Err");
+            alert.setHeaderText("No friends were found with that name!");
+            alert.setContentText("Try searching for a different name or check for typos.");
+            alert.showAndWait();
+        } else {
+
+            setTableData(users);
+        }
+    }
+    
+    @FXML
+    void searchUsers(ActionEvent event) {
 
         String name = searchField.getText();
 
@@ -106,6 +128,16 @@ public class FXMLDocumentController {
     }
 
     public List<Matcheduser> searchByName(String name) {
+
+        Query query = manager.createNamedQuery("Matcheduser.findByName");
+        query.setParameter("name", name);
+
+        List<Matcheduser> results = query.getResultList();
+
+        return results;
+    }
+    
+    public List<Matcheduser> searchPartByName(String name) {
 
         Query query = manager.createNamedQuery("Matcheduser.findNamesContaining");
         query.setParameter("name", "%" + name.toLowerCase() + "%");
