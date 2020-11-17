@@ -1,5 +1,6 @@
 package controller;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.text.DateFormat;
@@ -13,12 +14,16 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
@@ -58,6 +63,9 @@ public class FXMLDocumentController {
     
     @FXML
     private Button advSearchButton;
+    
+    @FXML
+    private Button showDetailButton;
 
     @FXML
     private TextField searchField;
@@ -145,6 +153,29 @@ public class FXMLDocumentController {
         List<Matcheduser> results = query.getResultList();
 
         return results;
+    }
+    
+    @FXML
+    void showDetails(ActionEvent event) throws IOException {
+
+        if(friendsList.getSelectionModel().isEmpty()){
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Show Detail Err");
+            alert.setHeaderText("No friend selected!");
+            alert.setContentText("Please select a friend to view additional details.");
+            alert.showAndWait();
+        }else{
+            Matcheduser selectedUser = friendsList.getSelectionModel().getSelectedItem();
+            FXMLLoader loader = new FXMLLoader (getClass().getResource("/view/DetailedModelView.fxml"));
+            Parent detailedModelView = loader.load();
+            Scene tableViewScene = new Scene(detailedModelView);
+            DetailModelController detailedController = loader.getController();
+            detailedController.initData(selectedUser);
+            
+            Stage stage = new Stage();
+            stage.setScene(tableViewScene);
+            stage.show();
+        }
     }
 
     @FXML
