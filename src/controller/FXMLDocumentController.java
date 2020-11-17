@@ -9,10 +9,16 @@ import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Scanner;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
@@ -46,14 +52,68 @@ public class FXMLDocumentController {
 
     @FXML
     private Button findByNameButton;
-    
+
     @FXML
     private Button searchButton;
-    
+
     @FXML
     private TextField searchField;
-    
-    
+
+    @FXML
+    private TableView<Matcheduser> friendsList;
+
+    @FXML
+    private TableColumn<Matcheduser, Integer> idCol;
+
+    @FXML
+    private TableColumn<Matcheduser, String> nameCol;
+
+    @FXML
+    private TableColumn<Matcheduser, Date> dateCol;
+
+    private ObservableList<Matcheduser> userData;
+
+    public void setTableData(List<Matcheduser> userList) {
+
+        userData = FXCollections.observableArrayList();
+
+        userList.forEach(s -> {
+            userData.add(s);
+        });
+
+        friendsList.setItems(userData);
+        friendsList.refresh();
+    }
+
+    @FXML
+    void searchStudents(ActionEvent event) {
+        System.out.println("Clicked!");
+
+        String name = searchField.getText();
+
+        List<Matcheduser> users = searchByName(name);
+
+        if (users == null || users.isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Search Err");
+            alert.setHeaderText("No friends were found with that name!");
+            alert.setContentText("Try searching for a different name or check for typos.");
+            alert.showAndWait();
+        } else {
+
+            setTableData(users);
+        }
+    }
+
+    public List<Matcheduser> searchByName(String name) {
+
+        Query query = manager.createNamedQuery("Matcheduser.findNamesContaining");
+        query.setParameter("name", "%" + name.toLowerCase() + "%");
+
+        List<Matcheduser> results = query.getResultList();
+
+        return results;
+    }
 
     @FXML
     void quit(ActionEvent event) {
@@ -122,12 +182,12 @@ public class FXMLDocumentController {
         Scanner input = new Scanner(System.in);
         System.out.println("\nEnter a letter or set of letters to search names by (do not use spaces):");
         String search = input.next();
-        
+
         Query query = manager.createNamedQuery("Matcheduser.findNamesContaining");
         query.setParameter("name", "%" + search + "%");
-        
+
         List<Matcheduser> foundNames = query.getResultList();
-        for(Matcheduser user : foundNames){
+        for (Matcheduser user : foundNames) {
             System.out.println("ID: " + user.getId() + " Named: " + user.getName() + ", Matched Since: " + df.format(user.getMatchsince()));
         }
     }
@@ -138,22 +198,16 @@ public class FXMLDocumentController {
         Scanner input = new Scanner(System.in);
         System.out.println("\nEnter a date to find which friends you've met before (YYYY-MM-DD format):");
         String search = input.next();
-        
+
         Date date = new SimpleDateFormat("yyyy-MM-dd").parse(search);
-        
+
         Query query = manager.createNamedQuery("Matcheduser.findMatchedBeforeDate");
         query.setParameter("matchsince", date);
-        
+
         List<Matcheduser> foundNames = query.getResultList();
-        for(Matcheduser user : foundNames){
+        for (Matcheduser user : foundNames) {
             System.out.println("ID: " + user.getId() + " Named: " + user.getName() + ", Matched Since: " + df.format(user.getMatchsince()));
         }
-    }
-    
-    @FXML
-    void searchStudents(ActionEvent event) {
-
-        System.out.println("Clicked!");
     }
 
     EntityManager manager;
@@ -162,6 +216,11 @@ public class FXMLDocumentController {
     void initialize() {
 
         manager = (EntityManager) Persistence.createEntityManagerFactory("LiamKirklandFMXLPU").createEntityManager();
+
+        this.nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
+        this.idCol.setCellValueFactory(new PropertyValueFactory<>("id")); //If you watched the recording im so sorry you had to watch that.
+        this.dateCol.setCellValueFactory(new PropertyValueFactory<>("matchsince")); //Cant figure out how to format date in a table :c
+
     }
 
     //Using code from the IntroJavaFX Demo
@@ -225,4 +284,5 @@ public class FXMLDocumentController {
             System.out.println(e.getMessage());
         }
     }
+
 }
