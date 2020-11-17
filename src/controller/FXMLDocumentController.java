@@ -12,6 +12,7 @@ import java.util.Scanner;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
@@ -45,6 +46,14 @@ public class FXMLDocumentController {
 
     @FXML
     private Button findByNameButton;
+    
+    @FXML
+    private Button searchButton;
+    
+    @FXML
+    private TextField searchField;
+    
+    
 
     @FXML
     void quit(ActionEvent event) {
@@ -139,6 +148,12 @@ public class FXMLDocumentController {
         for(Matcheduser user : foundNames){
             System.out.println("ID: " + user.getId() + " Named: " + user.getName() + ", Matched Since: " + df.format(user.getMatchsince()));
         }
+    }
+    
+    @FXML
+    void searchStudents(ActionEvent event) {
+
+        System.out.println("Clicked!");
     }
 
     EntityManager manager;
